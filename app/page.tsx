@@ -7,8 +7,6 @@ import FileUpload from '@/components/FileUpload';
 import FileValidation from '@/components/FileValidation';
 import MintButton from '@/components/MintButton';
 import StatusDisplay from '@/components/StatusDisplay';
-import HeroSection from '@/components/HeroSection';
-import SocialJoin from '@/components/SocialJoin';
 import { createInscriptionCommit, isFileSizeValid } from '@/lib/api';
 import type { InscriptionResponse } from '@/lib/api';
 
@@ -23,7 +21,6 @@ export default function Home() {
   const [isCalculating, setIsCalculating] = useState(false);
   const [txid, setTxid] = useState<string | null>(null);
   const [hasCalculated, setHasCalculated] = useState(false);
-  const [calculationError, setCalculationError] = useState<string | null>(null);
   
   // Track the current fee rate to prevent race conditions
   const currentFeeRateRef = useRef(feeRate);
@@ -33,8 +30,6 @@ export default function Home() {
   const abortControllerRef = useRef<AbortController | null>(null);
   // Debounce timer for fee rate changes
   const feeRateDebounceTimerRef = useRef<NodeJS.Timeout | null>(null);
-  // Track if we've shown an error alert to prevent spam
-  const hasShownErrorRef = useRef(false);
 
   // Debounce fee rate changes - wait 1 second after user stops changing before calculating
   useEffect(() => {
@@ -75,24 +70,18 @@ export default function Home() {
 
   // Auto-calculate when file becomes valid or fee rate changes (with debounce for fee rate)
   useEffect(() => {
-    // Don't auto-retry if there's an error - check current state
     const shouldCalculate = 
       walletAddress &&
       compressedFile &&
       isFileSizeValid(compressedFile.size) &&
       !isCalculating &&
-      !hasCalculated &&
-      !calculationError; // Don't auto-retry if there's an error
+      !hasCalculated;
 
     if (shouldCalculate) {
       // Clear any existing debounce timer
       if (feeRateDebounceTimerRef.current) {
         clearTimeout(feeRateDebounceTimerRef.current);
       }
-      
-      // Clear any previous error when starting new calculation
-      setCalculationError(null);
-      hasShownErrorRef.current = false;
       
       // Show calculating state immediately
       setIsPendingCalculation(true);
@@ -112,7 +101,7 @@ export default function Home() {
         clearTimeout(feeRateDebounceTimerRef.current);
       }
     };
-  }, [walletAddress, compressedFile, feeRate, hasCalculated, isCalculating, calculationError]);
+  }, [walletAddress, compressedFile, feeRate, hasCalculated, isCalculating]);
 
   const handleCalculate = async () => {
     if (!walletAddress || !compressedFile) return;
@@ -142,8 +131,6 @@ export default function Home() {
       if (currentFeeRateRef.current === calculationFeeRate) {
         setInscriptionData(data);
         setHasCalculated(true);
-        setCalculationError(null); // Clear any previous errors on success
-        hasShownErrorRef.current = false;
         needsRecalculationRef.current = false;
       } else {
         // Fee rate changed, ignore this stale result
@@ -158,20 +145,10 @@ export default function Home() {
         return;
       }
       
-      // Only handle error if this calculation is still relevant
+      // Only show error if this calculation is still relevant
       if (currentFeeRateRef.current === calculationFeeRate) {
-        const errorMessage = error.response?.data?.error || error.message || 'Failed to calculate inscription cost. Please try again.';
         console.error('Calculation failed:', error);
-        
-        // Set error state to prevent infinite retries
-        setCalculationError(errorMessage);
-        setHasCalculated(true); // Mark as calculated to prevent auto-retry
-        
-        // Only show alert once per error
-        if (!hasShownErrorRef.current) {
-          hasShownErrorRef.current = true;
-          alert(errorMessage);
-        }
+        alert('Failed to calculate inscription cost. Please try again.');
       }
     } finally {
       setIsCalculating(false);
@@ -198,8 +175,6 @@ export default function Home() {
     setInscriptionData(null);
     setTxid(null);
     setHasCalculated(false);
-    setCalculationError(null);
-    hasShownErrorRef.current = false;
   };
 
   const handleFileSelect = (file: File) => {
@@ -208,8 +183,6 @@ export default function Home() {
     setInscriptionData(null);
     setTxid(null);
     setHasCalculated(false);
-    setCalculationError(null);
-    hasShownErrorRef.current = false;
   };
 
   const handleCompressedFile = (file: File, compressing: boolean) => {
@@ -219,8 +192,6 @@ export default function Home() {
     if (!compressing) {
       setInscriptionData(null);
       setHasCalculated(false);
-      setCalculationError(null);
-      hasShownErrorRef.current = false;
     }
   };
 
@@ -232,9 +203,6 @@ export default function Home() {
     const minFeeRate = 0.13;
     const validatedRate = rate < minFeeRate ? minFeeRate : rate;
     setFeeRate(validatedRate);
-    // Clear error when fee rate changes to allow retry
-    setCalculationError(null);
-    hasShownErrorRef.current = false;
     // hasCalculated will be reset by the useEffect
     // Note: We don't clear inscriptionData here to avoid flickering
     // It will be updated when the new calculation completes
@@ -243,21 +211,46 @@ export default function Home() {
   const fileIsValid = compressedFile ? isFileSizeValid(compressedFile.size) : false;
 
   return (
-    <>
-      {/* Hero Section - Full width, outside main container */}
-      <HeroSection />
-
-      {/* Main Content */}
-      <main className="min-h-screen p-6 md:p-12 relative z-10 bg-dark-gradient-fade">
-        <div className="max-w-6xl mx-auto">
-          {/* Main Content - Single Column */}
-          <div className="max-w-3xl mx-auto space-y-6">
-          <div id="wallet-connect-section">
-            <WalletConnect 
-              onConnect={handleWalletConnect}
-              onDisconnect={handleWalletDisconnect}
+    <main className="min-h-screen p-4 md:p-8">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <a 
+            href="https://degent.club" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-3 mb-2 hover:opacity-80 transition-opacity"
+          >
+            <img 
+              src="/icon.jpg" 
+              alt="Degen Icon" 
+              className="w-12 h-12 md:w-16 md:h-16 rounded-lg"
             />
-          </div>
+            <h1 className="text-4xl md:text-5xl font-bold text-white">
+              Degent Minter
+            </h1>
+            <img 
+              src="/icon_flipped.jpg" 
+              alt="Degen Icon" 
+              className="w-12 h-12 md:w-16 md:h-16 rounded-lg"
+            />
+          </a>
+          <a 
+            href="https://degent.club" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-gray-300 text-lg hover:text-bitcoin transition-colors"
+          >
+            by Degent Club
+          </a>
+        </div>
+
+        {/* Main Content - Single Column */}
+        <div className="max-w-3xl mx-auto space-y-6">
+          <WalletConnect 
+            onConnect={handleWalletConnect}
+            onDisconnect={handleWalletDisconnect}
+          />
 
           <AIInstructions />
 
@@ -282,15 +275,16 @@ export default function Home() {
             onFeeRateChange={handleFeeRateChange}
           />
 
-          <SocialJoin />
-
-            <StatusDisplay
-              txid={txid}
-            />
-          </div>
-
+          <StatusDisplay
+            txid={txid}
+          />
         </div>
-      </main>
-    </>
+
+        {/* Footer */}
+        <div className="mt-12 text-center text-gray-500 text-sm">
+          <p>Powered by <a href="https://skrybit.io">Skrybit API</a> • <a href="https://unisat.io">UniSat Wallet</a></p>
+        </div>
+      </div>
+    </main>
   );
 }

@@ -68,13 +68,8 @@ export default function FileUpload({ onFileSelect, disabled }: FileUploadProps) 
   };
 
   return (
-    <div className="rounded-degent-card border border-degent-border bg-degent-card/50 backdrop-blur-sm p-6 shadow-lg">
-      <h2 className="text-2xl font-bold mb-4 text-white flex items-center gap-3">
-        <span className="bg-degent-green/10 border border-degent-green/20 icon-square p-3 rounded-degent-button">
-          <i className="fas fa-upload text-degent-green"></i>
-        </span>
-        Upload Your Image
-      </h2>
+    <div className="bg-gray-800 rounded-lg p-6 shadow-lg">
+      <h2 className="text-2xl font-bold mb-4 text-white">📤 Upload Your Image</h2>
       
       <div
         onClick={handleClick}
@@ -82,9 +77,9 @@ export default function FileUpload({ onFileSelect, disabled }: FileUploadProps) 
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         className={`
-          border-2 border-dashed rounded-degent-card p-8 text-center transition-all
-          ${disabled ? 'opacity-50 cursor-not-allowed pointer-events-none' : 'cursor-pointer hover:border-degent-green'}
-          ${isDragging ? 'border-degent-green bg-degent-green/10' : 'border-degent-border'}
+          border-2 border-dashed rounded-lg p-8 text-center transition-all
+          ${disabled ? 'opacity-50 cursor-not-allowed pointer-events-none' : 'cursor-pointer hover:border-bitcoin'}
+          ${isDragging ? 'border-bitcoin bg-bitcoin/10' : 'border-gray-600'}
         `}
         role="button"
         tabIndex={disabled ? -1 : 0}
@@ -105,21 +100,18 @@ export default function FileUpload({ onFileSelect, disabled }: FileUploadProps) 
         />
         
         <div className="space-y-2">
-          <div className="text-4xl">
-            <i className="fas fa-folder-open text-degent-green"></i>
-          </div>
+          <div className="text-4xl">📁</div>
           <p className="text-white font-semibold">
             {isDragging ? 'Drop your image here' : 'Click or drag to upload'}
           </p>
-          <p className="text-degent-muted text-sm">
+          <p className="text-gray-400 text-sm">
             Accepted: JPG, PNG, GIF, WebP
           </p>
         </div>
       </div>
 
       {error && (
-        <div className="mt-4 p-3 bg-red-900/50 border border-red-500 rounded-degent-button text-red-200 text-sm flex items-center gap-2">
-          <i className="fas fa-exclamation-circle"></i>
+        <div className="mt-4 p-3 bg-red-900/50 border border-red-500 rounded text-red-200 text-sm">
           {error}
         </div>
       )}
