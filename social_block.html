@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clean Social Join Block</title>
+    <!-- Import Space Grotesk Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS Script -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Essential base settings */
+        body { font-family: 'Space Grotesk', sans-serif; background-color: #000; }
+        
+        /* Custom Bezier for the button slide animation to match source exactly */
+        .ease-slide { transition-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1); }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <!-- Main Container -->
+    <div class="relative w-full max-w-[1320px] rounded-[10px] overflow-hidden bg-[#1a1a1d] isolate group/card">
+        
+        <!-- Background Image -->
+        <div class="absolute inset-0 z-0 bg-cover bg-center transition-transform duration-500 ease-out group-hover/card:scale-105" 
+             style="background-image: url('https://degent.club/wp-content/uploads/2025/10/degens_grid-1030x579.jpg');">
+        </div>
+
+        <!-- Dark Overlay (Replicating ripped-1::before) -->
+        <div class="absolute inset-0 z-0 bg-[#1a1a1d]/90"></div>
+
+        <!-- Content Wrapper -->
+        <div class="relative z-10 flex flex-col items-center justify-center px-8 py-[60px] text-center">
+            
+            <!-- Heading -->
+            <h3 class="text-[32px] font-bold leading-[35px] text-white">
+                Join the Members group. 
+                <!-- Gradient Text -->
+                <span class="bg-gradient-to-r from-[#2efc86] to-[#f7931a] bg-clip-text text-transparent font-bold">
+                    Mint your legacy
+                </span>
+            </h3>
+
+            <!-- Subheading -->
+            <div class="mt-2 text-lg font-bold text-white">
+                <p class="text-[16px] font-light text-white/60">If everything’s correctly set up, you’ll automatically be allowed in. Just sit tight!</p>
+            </div>
+
+            <!-- Divider/Spacer -->
+            <div class="w-full max-w-[1200px] h-[30px] flex items-center">
+                <!-- Optional: Visible HR line if needed, currently transparent in source -->
+            </div>
+
+            <!-- Button Row -->
+            <div class="flex flex-wrap justify-center gap-2">
+                
+                <!-- Telegram Button -->
+                <a href="https://t.me/+cneroYQ-0VpmM2Ix" target="_blank" rel="noopener noreferrer nofollow" 
+                   class="relative overflow-hidden group flex items-center justify-center h-[52px] min-w-[200px] px-8 rounded-md bg-[#2563eb] border-b border-[#2563eb] text-white font-semibold text-[16px] transition-all duration-400">
+                    
+                    <!-- Hover Slide Effect (Green Background) -->
+                    <span class="absolute inset-0 bg-[#2efc86] translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-700 ease-slide"></span>
+                    
+                    <!-- Button Content -->
+                    <span class="relative z-10 flex items-center gap-2">
+                        <span>Join Telegram</span>
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 29 32" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M28.608 4.16q0.448-0.128 0.704 0.096t0.128 0.608q-0.064 0.192-2.304 9.92t-2.368 10.112q-0.064 0.448-0.448 0.608t-0.768-0.032l-8.896-4.8 0.704-0.832q12.416-13.44 12.608-13.632 0.128-0.128-0.032-0.288t-0.288-0.032l-17.6 12.864-3.584-1.408-6.080-2.432q-0.384-0.128-0.384-0.384t0.384-0.384q0.256-0.128 14.112-5.024t14.112-4.96zM9.984 27.456v-6.528l5.12 2.624q-4.16 3.712-4.544 4.096-0.576 0.448-0.576-0.192z"></path>
+                        </svg>
+                    </span>
+                </a>
+
+                <!-- X (Twitter) Button -->
+                <a href="https://x.com/degentclub" target="_blank" rel="noopener noreferrer nofollow" 
+                   class="relative overflow-hidden group flex items-center justify-center h-[52px] min-w-[200px] px-8 rounded-md bg-[#1a1a1d] border border-[#63636b] text-white font-semibold text-[16px] transition-all duration-400">
+                    
+                    <!-- Hover Slide Effect (Green Background) -->
+                    <span class="absolute inset-0 bg-[#2efc86] translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-700 ease-slide"></span>
+                    
+                    <!-- Button Content -->
+                    <span class="relative z-10 flex items-center gap-2">
+                        <span>Follow on X</span>
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M24.32 3.008h4.416l-9.632 11.008 11.328 14.976h-8.864l-6.976-9.088-7.936 9.088h-4.416l10.304-11.776-10.88-14.208h9.12l6.272 8.288 7.264-8.288zM22.784 26.368h2.432l-15.776-20.864h-2.624l15.968 20.864z"></path>
+                        </svg>
+                    </span>
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
