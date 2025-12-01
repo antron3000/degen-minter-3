@@ -123,7 +123,7 @@ export default function MintButton({
           step="0.1"
           className="bg-degent-input border border-degent-border flex-grow focus:border-degent-green focus:ring-1 focus:ring-degent-green outline-none px-5 py-3 rounded-degent-button text-white transition-colors w-full"
         />
-        <p className="info-text"><i className="fa-circle-info fas"></i>Higher fee rates result in faster confirmation times (minimum: 0.1 sat/vb)</p>
+        <p className="info-text"><i className="fa-circle-info fas"></i>Higher fee rates result in faster confirmation times (minimum: 0.13 sat/vb)</p>
       </div>
 
        {isCalculating && calculatingFeeRate !== null ? (
